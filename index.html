@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Consulta de CEP</title>
+</head>
+<body>
+
+    <div class="container">
+        <div class="margin">
+            <div class="container-content">
+                <h1>Consulta de CEP</h1>
+            
+                <label for="cepInput">Digite o CEP:</label>
+                <input type="text" id="cepInput" placeholder="Ex: 12345-678">
+                <button onclick="consultarCEP()">Consultar</button>
+                <div class="container-result">
+                    <div class="header-result">
+            
+                    </div>
+                    <div id="resultado"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function consultarCEP() {
+            // Obter o valor do input
+            var cep = document.getElementById('cepInput').value;
+
+            // Construir a URL da API com o CEP fornecido
+            var url = `https://viacep.com.br/ws/${cep}/json/`;
+
+            // Fazer a requisição à API usando fetch
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Verificar se a requisição foi bem-sucedida
+                    if (!data.erro) {
+                        var textoSucess = document.querySelector('.header-result');
+                        textoSucess.innerHTML = `
+                            <p>Resultado encontrado:</p>
+                        `;
+                        // Exibir os resultados
+                        var resultadoDiv = document.getElementById('resultado');
+                        resultadoDiv.innerHTML = `
+                            <p>CEP: ${data.cep}</p>
+                            <p>Logradouro: ${data.logradouro}</p>
+                            <p>Bairro: ${data.bairro}</p>
+                            <p>Cidade: ${data.localidade}</p>
+                            <p>Estado: ${data.uf}</p>
+                        `;
+                    } else {
+                        alert("CEP não encontrado. Verifique o CEP e tente novamente.");
+                    }
+                })
+                .catch(error => console.error('Erro na requisição:', error));
+        }
+    </script>
+</body>
+</html>
